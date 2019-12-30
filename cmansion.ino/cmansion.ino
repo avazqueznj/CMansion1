@@ -1,5 +1,5 @@
 
-/*
+/***********************************************************************
  
  Chato's Mansion v1
  GNU GPL 3
@@ -10,7 +10,7 @@
 ../arduino-cli.exe compile -b arduino:avr:leonardo ./P11N.ino
 arduino-cli.exe upload -p COM4 -b arduino:avr:leonardo P11.ino  
  
- */
+ ***********************************************************************/
 
 #include <Arduboy2.h> 
 #include <ArduboyTones.h>
@@ -289,15 +289,7 @@ public:
         
         // x component        
         newCurrentX = roundf( currentX + (targetSpeed * cos(angleRadians)));   
-        newCurrentY = roundf( currentY - (targetSpeed * sin(angleRadians)));        
-                   
-//        arduboy.print("A");        
-//        arduboy.print(currentAngle);
-//        arduboy.print("-");        
-//        arduboy.print(newCurrentX);
-//        arduboy.print("-");        
-//        arduboy.print(newCurrentY);
-//        arduboy.print("\n");                
+        newCurrentY = roundf( currentY - (targetSpeed * sin(angleRadians)));                       
  
         // draw player
         paint();        
@@ -593,9 +585,6 @@ public:
     
 };
 
-
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 int playerScore = 0;
@@ -747,7 +736,7 @@ void doCollisions(){
                     break;
                 }            
             }         
-        } //------------
+        } 
                 
         if( Current->type() == GHOST_TYPE ){                        
             
@@ -770,9 +759,6 @@ void doCollisions(){
                 arduboy.print( "\n"  );                
                 arduboy.print( "      press [A]"  );    
                 
-//arduboy.setCursor( 0,0 );
-//arduboy.print(freeMemory());  
-                
                 activeGhosts = 0;
                 playerScore = 0;                 
                 gunCycling = false;                
@@ -791,7 +777,7 @@ void doCollisions(){
                 return;
             }
                 
-        } //------------        
+        }       
         
         if( tempList.hasNext() ){
             tempList.next();
@@ -799,32 +785,14 @@ void doCollisions(){
             break;
         }            
 
-    }
-
-    
+    }    
 }
 
 bool freeze = false;
 void debug(){
-   
+ 
 //    arduboy.setCursor( 0,0 );
-//    arduboy.print(freeMemory());
-    
-    
-//    //debug
-//    if( arduboy.pressed(A_BUTTON)  ) {
-//
-//        if( freeze ){
-//            freeze = false;
-//        }else{
-//            freeze = true;
-//        }    
-//        delay(100);
-//    }           
-//    if( freeze ){
-//        delay(500);
-//        return;
-//    }    
+//    arduboy.print(freeMemory()); 
 }
 
 void showSplash(){
@@ -832,10 +800,7 @@ void showSplash(){
     sprites.drawOverwrite( 0, 0, splashScreen,0);
     arduboy.setCursor( 0, 0);
     arduboy.print( "press [A]\n" );    
-    arduboy.print( "Up/Dwn aim\n" );        
-    
-//arduboy.setCursor( 0,0 );
-//arduboy.print(freeMemory());     
+    arduboy.print( "Up/Dwn aim\n" );          
     
     arduboy.display();
     
