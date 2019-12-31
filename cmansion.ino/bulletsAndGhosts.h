@@ -24,7 +24,7 @@ public:
         :bouncerClass(  nameParam,  xStart,  yStart,  angleStart, NULL, BULLET_LIFE, BULLET_SPEED ){ }
       
     void virtual paint(){
-        arduboy.drawLine(currentX,currentY,newCurrentX,newCurrentY);
+        arduboy.drawLine(startX,startY,endX,endY);
     }
     
     int virtual type(){
@@ -101,6 +101,8 @@ public:
 
 #define GHOST_TYPE 3
 #define GHOST_SLOW_DOWN 4
+#define GHOST_LIFE 5000
+#define GHOST_SPEED 3
 int activeGhosts = 0;
 class ghostClass: public bouncerClass{ 
 private:

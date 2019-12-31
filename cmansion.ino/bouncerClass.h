@@ -10,18 +10,12 @@
 #define BOUNCERCLASS_H
 
 const float PROGMEM radiansPerAngle = 0.01745329252;
-class bouncerClass:public eventClass{
+class bouncerClass:public screenEventClass{
 public:
     //uses
     const int targetName;
     
-    //has 
-    int currentX;
-    int currentY;    
-    int newCurrentX;   
-    int newCurrentY;
-    int currentAngle;   
-    
+    //has     
     bool alive = true;
     unsigned long birthTime = 0;
     unsigned long timeToLive = 0;
@@ -32,68 +26,63 @@ public:
     
     bouncerClass( const int nameParam, const int xStart, const int yStart, const int angleStart, 
                 const byte* spriteMapParam, const unsigned long timeToLiveParam, const unsigned long targetSpeedParam ): 
-        currentX{xStart},
-        currentY{yStart},
-        currentAngle{angleStart},          
         targetName{nameParam},
         timeToLive{timeToLiveParam},
         targetSpeed{targetSpeedParam},
         spriteMap{spriteMapParam},
-        eventClass()
+        screenEventClass(xStart, yStart, angleStart)
         {
             //has
             birthTime = millis();
         }
     
     void virtual bouceHorizontally(){
-        if( currentAngle < 180 ){
-            int dif = currentAngle - 90;
-            currentAngle = 90 - dif;
+        if( angle < 180 ){
+            int dif = angle - 90;
+            angle = 90 - dif;
         }else{
-            int dif = 270 - currentAngle;
-            currentAngle = 270 + dif;
+            int dif = 270 - angle;
+            angle = 270 + dif;
             }          
     }
     
     void virtual bounceVertically(){
-        if( currentAngle < 90 ){
-            int dif = 90 - currentAngle;
-            currentAngle = 270 + dif;
+        if( angle < 90 ){
+            int dif = 90 - angle;
+            angle = 270 + dif;
         }else{
-            int dif = currentAngle - 90;
-            currentAngle = 270 - dif;
+            int dif = angle - 90;
+            angle = 270 - dif;
         }        
     }
     
     void virtual render(){                
-                                                              
+                                                                             
         // bounce side left
-        if( currentX < 0 || currentX >128 ){            
+        if( startX < 0 || startX >128 ){            
             bouceHorizontally();
         }
             
         // bounce top & bottom
-        if( currentY < 0 || currentY >64 ){
+        if( startY < 0 || startY >64 ){
             bounceVertically();            
         }
-                
-        float angleRadians = currentAngle * radiansPerAngle;                                  
-        
+                        
         // x component        
-        newCurrentX = roundf( currentX + (targetSpeed * cos(angleRadians)));   
-        newCurrentY = roundf( currentY - (targetSpeed * sin(angleRadians)));                       
+        endX = roundf( startX + (targetSpeed * cos(angle * radiansPerAngle)));   
+        endY = roundf( startY - (targetSpeed * sin(angle * radiansPerAngle)));                       
  
         // draw player
         paint();        
         
-        currentX = newCurrentX;
-        currentY = newCurrentY;   
+        startX = endX;
+        startY = endY;   
                 
     }
     
     void virtual paint(){
         // draw player
-        sprites.drawOverwrite( currentX, currentY, spriteMap, 0);         
+        sprites.drawOverwrite( startX, startY, spriteMap, 0);         
     }
             
     int virtual name(){

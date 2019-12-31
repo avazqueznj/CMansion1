@@ -36,6 +36,21 @@ public:
     }
 };
 
+
+class screenEventClass: public eventClass{
+public:
+    int startX;
+    int startY;
+    int endX;
+    int endY;   
+    int angle;
+    screenEventClass( int Xparam, int YParam, int angleParam ):
+        startX{ Xparam },startY{ YParam },        
+        endX{ Xparam },endY{ YParam }, angle{angleParam},
+        eventClass(){
+    }
+};
+
 int pk = 0;
 LinkedList< eventClass* > scheduler;
 
