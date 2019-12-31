@@ -201,6 +201,7 @@ void doCollisions(){
             const Rect playerRect = Rect( player1->playerX, player1->playerY,8,8 );                                                                       
             if(arduboy.collide(ghostRect, playerRect )){
                 doGameOver();
+                return;
             }                
         }       
         

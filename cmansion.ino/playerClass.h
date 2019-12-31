@@ -35,7 +35,7 @@ public:
 public:         
         
     playerClass( const int nameParam ):playerName{nameParam},eventClass(){        
-       
+        
     }    
     
     void drawAimer(){
