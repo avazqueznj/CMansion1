@@ -131,22 +131,23 @@ void makeGhosts(){
             
     if( (activeGhosts < totalGhostsForLevel) && (freeMemory() > 100) ){
         
-        activeGhosts++;
-
-        // make a ghost        
-        int randomX = random( 10, 120);
-        int randomY = random( 10, 20);
-        int randomAngle  = random( 0, 360);
-        
+        activeGhosts++;        
         pk++;
-        ghostClass* gohst = new ghostClass( pk, randomX, randomY, randomAngle, ghostSprite, 5000, 3 ); // ttl, speed
+        ghostClass* gohst = new ghostClass( 
+                pk, 
+                random( 10, 120),  //x
+                random( 10, 20),  //y
+                random( 0, 360),  //angle
+                ghostSprite, 
+                GHOST_LIFE, 
+                GHOST_SPEED ); 
         scheduler.Append( gohst );                      
     }    
 }
 
 void doCollisions(){
 
-    // temp
+    // TODO: redo all these ....
     const LinkedList< eventClass* > tempList;    
     if( scheduler.moveToStart()) while( true ){                              
         tempList.Append( scheduler.getCurrent() );
@@ -157,32 +158,32 @@ void doCollisions(){
         }            
     }
 
-    // check bullets
+    // Check collisions
     if( tempList.moveToStart()) while( true ){                                             
-        // bullets to ghost and player
-        eventClass* Current = tempList.getCurrent();        
+        const eventClass* collisionSource = tempList.getCurrent();
         
-        if( Current->type() == BULLET_TYPE ){              
-            const Point bulletPoint = Point( ((bulletClass*)Current)->currentX, ((bulletClass*)Current)->currentY );
+        // BULLET COLLISION
+        if( collisionSource->type() == BULLET_TYPE ){              
+            const Point bulletPoint = Point( ((bulletClass*)collisionSource)->startX, ((bulletClass*)collisionSource)->startY );
             
-            if( scheduler.moveToStart()) while( true ){                              
-                const eventClass* target = scheduler.getCurrent();
+            // scan possible targets            
+            if( scheduler.moveToStart()) while( true ){                    
+                const eventClass* collisionTarget = scheduler.getCurrent();
+                const Rect targetRect = Rect( ((screenEventClass*)collisionTarget)->startX, ((screenEventClass*)collisionTarget)->startY, 8,8 );                                                           
                 
-                // hit ??
-                if(target->type() == GHOST_TYPE){                    
-                    const Rect targetRect = Rect( ((ghostClass*)target)->currentX, ((ghostClass*)target)->currentY,8,8 );                                                           
+                // .. with GHOST
+                if(collisionTarget->type() == GHOST_TYPE){                                        
                     if(arduboy.collide(bulletPoint, targetRect )){
-                        ((ghostClass*)target)->kill();
-                        ((bulletClass*)Current)->doHit();
+                        ((ghostClass*)collisionTarget)->kill();
+                        ((bulletClass*)collisionSource)->doHit();
                         playerScore++;
                     }
                 }
 
-                // hit ??
-                if(target->type() == PLAYER_TYPE){                    
-                    const Rect targetRect = Rect( ((playerClass*)target)->playerX, ((playerClass*)target)->playerY,8,8 );                                                           
+                // .. with PLAYER
+                if(collisionTarget->type() == PLAYER_TYPE){                    
                     if(arduboy.collide(bulletPoint, targetRect )){                        
-                        ((bulletClass*)Current)->doHit();                           
+                        ((bulletClass*)collisionSource)->doHit();                           
                          playerScore =  playerScore - 2;                              
                          sound.tone(5000, 100);                                                                           
                     }
@@ -195,10 +196,13 @@ void doCollisions(){
                 }            
             }         
         } 
-                
-        if( Current->type() == GHOST_TYPE ){                                    
-            const Rect ghostRect = Rect( ((ghostClass*)Current)->currentX, ((ghostClass*)Current)->currentY, 8, 8 );            
-            const Rect playerRect = Rect( player1->playerX, player1->playerY,8,8 );                                                                       
+          
+        // GHOST COLLISION
+        if( collisionSource->type() == GHOST_TYPE ){    
+            
+            // .. with PLAYER
+            const Rect ghostRect = Rect( ((ghostClass*)collisionSource)->startX, ((ghostClass*)collisionSource)->startY, 8, 8 );            
+            const Rect playerRect = Rect( player1->startX, player1->startY,8,8 );                                                                       
             if(arduboy.collide(ghostRect, playerRect )){
                 doGameOver();
                 return;

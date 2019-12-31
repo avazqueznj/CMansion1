@@ -14,34 +14,34 @@
 
 
 #define PLAYER_TYPE 2
-#define STARTX 64;
-#define STARTY 56;
-#define ANGLE_CHANGE_SPEED 4;
+#define STARTX 64
+#define STARTY 56
+#define AIM_ANGLE 90
+#define ANGLE_CHANGE_SPEED 4
 #define SIZE_GUN 4
 #define GUN_CYCLE_DELAY 200
-class playerClass:public eventClass{
+class playerClass:public screenEventClass{
 public: 
         
     //uses
     const int playerName;
     
     //has -  defaulted
-    int playerX = STARTX; 
-    int playerY = STARTY;
-    int aimAngle = 90;
-    int realAimlAngle = 0;
+    int aimAngle = AIM_ANGLE;
+    int normalAimlAngle = 0;
     int aimX = 0;              
     int aimY = 0;    
 public:         
         
-    playerClass( const int nameParam ):playerName{nameParam},eventClass(){        
-        
+    playerClass( const int nameParam ):
+        playerName{ nameParam },        
+        screenEventClass( STARTX, STARTY, 0 ){                
     }    
     
     void drawAimer(){
              
-        const int aimBaseX = playerX + 5;  // middle
-        const int aimBasey = playerY ;  // gap on top     
+        const int aimBaseX = startX + 5;  // middle
+        const int aimBasey = startY ;  // gap on top     
         
         if( arduboy.pressed(DOWN_BUTTON) && (aimAngle > 0) ) {
             aimAngle = aimAngle - ANGLE_CHANGE_SPEED;                    
@@ -52,10 +52,10 @@ public:
         }    
           
         // figure angle
-        realAimlAngle = 180 - aimAngle;    
+        normalAimlAngle = 180 - aimAngle;    
         
         // get angle in radians          
-        const float angleRadians = realAimlAngle * radiansPerAngle;     
+        const float angleRadians = normalAimlAngle * radiansPerAngle;     
         
         // x component
         aimX = roundf( aimBaseX + (SIZE_GUN * cos(angleRadians)));               
@@ -68,21 +68,21 @@ public:
     void drawPlayer(){
         
         if( arduboy.pressed(LEFT_BUTTON) ) {
-            playerX--;
-            if(playerX < 0){
-                playerX = (WIDTH -8);
+            startX--;
+            if(startX < 0){
+                startX = (WIDTH -8);
             }
         }
 
         if( arduboy.pressed(RIGHT_BUTTON )  ) {
-            playerX++;   
-            if(playerX > (WIDTH -8)){
-                playerX = 0;
+            startX++;   
+            if(startX > (WIDTH -8)){
+                startX = 0;
             }
         }        
         
         // draw player
-        sprites.drawOverwrite( playerX, playerY, playerSprite, 0); 
+        sprites.drawOverwrite( startX, startY, playerSprite, 0); 
         
         // shoot!! event
         if( arduboy.pressed(B_BUTTON) && (!gunCycling) && (freeMemory() > 100) ){
@@ -119,7 +119,7 @@ public:
     
     
     int getRealAimlAngle(){
-        return realAimlAngle;
+        return normalAimlAngle;
     }
     int getRealAimX(){
         return aimX;
