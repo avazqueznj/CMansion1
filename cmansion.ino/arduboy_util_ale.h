@@ -1,7 +1,12 @@
 
+#include <Arduboy2.h> 
+#include <ArduboyTones.h>
 
 #ifndef ARDUBOY_UTIL_ALE_H
 #define ARDUBOY_UTIL_ALE_H
+
+Arduboy2 arduboy;
+ArduboyTones sound(arduboy.audio.enabled);
 
 
 #ifdef __arm__
@@ -23,9 +28,6 @@ int freeMemory() {
 }
 
 
-class Iterator{
-    
-};
 
 #endif /* ARDUBOY_UTIL_ALE_H */
 
