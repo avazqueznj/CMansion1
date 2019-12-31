@@ -52,22 +52,23 @@ public:
 #define GUNCYCLE_TYPE 5
 bool gunCycling = false;
 class gunCycleClass:public eventClass{
-private:
-    
+private:    
     //uses
-    int gunCycleName;
-    unsigned long birthTime = 0;
-    unsigned long cycleTime = 0;
+    const int gunCycleName;
+    const unsigned long cycleTime = 0;
+    //has
+    unsigned long birthTime = 0;    
 public:
     
-    gunCycleClass( int nameParam, int timeToCycleParam):eventClass(){
-        //uses               
-        gunCycleName = nameParam;
-        cycleTime = timeToCycleParam;
-        //has
-        birthTime = millis();
-        gunCycling = true;
-    }        
+    gunCycleClass( const int nameParam, const int timeToCycleParam):
+        gunCycleName{nameParam},
+        cycleTime{timeToCycleParam},
+        eventClass(){
+            // uses
+            gunCycling = true;
+            //has
+            birthTime = millis();            
+        }        
             
     int virtual name(){
         return gunCycleName;
@@ -104,13 +105,20 @@ int activeGhosts = 0;
 class ghostClass: public bouncerClass{ 
 private:
     
+    // uses
+    
+    // has
     bool isAlive = true;
     int skippedFrames = 0;
     
 public:
-    ghostClass( int nameParam, int xStart, int yStart, int angleStart, const byte* spriteMapParam,
-            unsigned long timeToLiveParam, unsigned long targetSpeedParam )
-        :bouncerClass(  nameParam,  xStart,  yStart,  angleStart, spriteMapParam, timeToLiveParam, targetSpeedParam ){ }
+    ghostClass( 
+        const int nameParam, const int xStart, const int yStart, 
+        const int angleStart, const byte* spriteMapParam,
+        const unsigned long timeToLiveParam, unsigned long targetSpeedParam )
+        :bouncerClass(  
+            nameParam,  xStart,  yStart,  angleStart, spriteMapParam, 
+            timeToLiveParam, targetSpeedParam ){ }
 
     void virtual run(){
         

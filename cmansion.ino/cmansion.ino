@@ -114,16 +114,15 @@ void loop() {
             }else{
                 break;
             }            
-        }                    
-    
+        }                        
 
-    doGohsts();    
+    makeGhosts();    
     doCollisions();    
     arduboy.display();    
 }
 
 
-void doGohsts(){
+void makeGhosts(){
     
     int totalGhostsForLevel = 1;    
     if( playerScore > 5 ){        
@@ -148,7 +147,7 @@ void doGohsts(){
 void doCollisions(){
 
     // temp
-    LinkedList< eventClass* > tempList;    
+    const LinkedList< eventClass* > tempList;    
     if( scheduler.moveToStart()) while( true ){                              
         tempList.Append( scheduler.getCurrent() );
         if( scheduler.hasNext() ){
@@ -159,20 +158,19 @@ void doCollisions(){
     }
 
     // check bullets
-    if( tempList.moveToStart()) while( true ){                  
-                           
+    if( tempList.moveToStart()) while( true ){                                             
         // bullets to ghost and player
         eventClass* Current = tempList.getCurrent();        
         
-        if( Current->type() == BULLET_TYPE ){                        
-            Point bulletPoint = Point( ((bulletClass*)Current)->currentX, ((bulletClass*)Current)->currentY );
+        if( Current->type() == BULLET_TYPE ){              
+            const Point bulletPoint = Point( ((bulletClass*)Current)->currentX, ((bulletClass*)Current)->currentY );
             
             if( scheduler.moveToStart()) while( true ){                              
-                eventClass* target = scheduler.getCurrent();
+                const eventClass* target = scheduler.getCurrent();
                 
                 // hit ??
                 if(target->type() == GHOST_TYPE){                    
-                    Rect targetRect = Rect( ((ghostClass*)target)->currentX, ((ghostClass*)target)->currentY,8,8 );                                                           
+                    const Rect targetRect = Rect( ((ghostClass*)target)->currentX, ((ghostClass*)target)->currentY,8,8 );                                                           
                     if(arduboy.collide(bulletPoint, targetRect )){
                         ((ghostClass*)target)->kill();
                         ((bulletClass*)Current)->doHit();
@@ -182,9 +180,8 @@ void doCollisions(){
 
                 // hit ??
                 if(target->type() == PLAYER_TYPE){                    
-                    Rect targetRect = Rect( ((playerClass*)target)->playerX, ((playerClass*)target)->playerY,8,8 );                                                           
-                    if(arduboy.collide(bulletPoint, targetRect )){
-                        
+                    const Rect targetRect = Rect( ((playerClass*)target)->playerX, ((playerClass*)target)->playerY,8,8 );                                                           
+                    if(arduboy.collide(bulletPoint, targetRect )){                        
                         ((bulletClass*)Current)->doHit();                           
                          playerScore =  playerScore - 2;                              
                          sound.tone(5000, 100);                                                                           
@@ -199,45 +196,12 @@ void doCollisions(){
             }         
         } 
                 
-        if( Current->type() == GHOST_TYPE ){                        
-            
-            Rect ghostRect = Rect( ((ghostClass*)Current)->currentX, ((ghostClass*)Current)->currentY, 8, 8 );            
-            Rect playerRect = Rect( player1->playerX, player1->playerY,8,8 );                                                           
-            
+        if( Current->type() == GHOST_TYPE ){                                    
+            const Rect ghostRect = Rect( ((ghostClass*)Current)->currentX, ((ghostClass*)Current)->currentY, 8, 8 );            
+            const Rect playerRect = Rect( player1->playerX, player1->playerY,8,8 );                                                                       
             if(arduboy.collide(ghostRect, playerRect )){
-                                                  
-                // clear 
-                while( scheduler.moveToStart() ){
-                    delete( scheduler.getCurrent() );
-                    scheduler.DeleteCurrent();
-                }
-                               
-                arduboy.clear();
-                arduboy.setCursor( 0, 30 );                              
-                arduboy.print( "[[ GAME OVER CHATO!]]\n" );
-                arduboy.print( "   final score "  );
-                arduboy.print( playerScore );                                
-                arduboy.print( "\n"  );                
-                arduboy.print( "      press [A]"  );    
-                
-                activeGhosts = 0;
-                playerScore = 0;                 
-                gunCycling = false;                
-                
-                arduboy.display();
-                sound.tones(song1);  
-                
-                pk++;
-                player1 = new playerClass(pk);
-                scheduler.Append( player1 );  
-                                
-                while(!arduboy.pressed(A_BUTTON)) delay( 100 );
-                                                
-                spashScreen = true;
-                delay( 500 );
-                return;
-            }
-                
+                doGameOver();
+            }                
         }       
         
         if( tempList.hasNext() ){
@@ -245,9 +209,45 @@ void doCollisions(){
         }else{
             break;
         }            
-
     }    
 }
+
+
+void doGameOver(){
+    
+    // clear 
+    while( scheduler.moveToStart() ){
+        delete( scheduler.getCurrent() );
+        scheduler.DeleteCurrent();
+    }
+
+    arduboy.clear();
+    arduboy.setCursor( 0, 30 );                              
+    arduboy.print( "[[ GAME OVER CHATO!]]\n" );
+    arduboy.print( "   final score "  );
+    arduboy.print( playerScore );                                
+    arduboy.print( "\n"  );                
+    arduboy.print( "      press [A]"  );    
+
+    activeGhosts = 0;
+    playerScore = 0;                 
+    gunCycling = false;                
+
+    arduboy.display();
+    sound.tones(song1);  
+
+    pk++;
+    player1 = new playerClass(pk);
+    scheduler.Append( player1 );  
+
+    while(!arduboy.pressed(A_BUTTON)) delay( 100 );
+
+    spashScreen = true;
+    delay( 500 );
+    
+    return;    
+}
+
 
 bool freeze = false;
 void debug(){

@@ -13,34 +13,37 @@ const float PROGMEM radiansPerAngle = 0.01745329252;
 class bouncerClass:public eventClass{
 public:
     //uses
-    int targetName;
-    int currentX = 0;
-    int currentY = 0;
-    int newCurrentX = 0;   
-    int newCurrentY = 0;
-    int currentAngle = 0;    
+    const int targetName;
+    
     //has 
+    int currentX;
+    int currentY;    
+    int newCurrentX;   
+    int newCurrentY;
+    int currentAngle;   
+    
     bool alive = true;
     unsigned long birthTime = 0;
     unsigned long timeToLive = 0;
     unsigned long targetSpeed = 0;    
-    const byte*   spriteMap;
+    const byte*   spriteMap;    
+    
 public:
     
-    bouncerClass( int nameParam, int xStart, int yStart, int angleStart, const byte* spriteMapParam,
-            unsigned long timeToLiveParam, unsigned long targetSpeedParam ):eventClass(){
-        //uses
-        currentX = xStart;
-        currentY = yStart;
-        currentAngle = angleStart;                  
-        targetName = nameParam;
-        timeToLive = timeToLiveParam;
-        targetSpeed = targetSpeedParam;
-        spriteMap = spriteMapParam;
-        
-        //has
-        birthTime = millis();
-    }
+    bouncerClass( const int nameParam, const int xStart, const int yStart, const int angleStart, 
+                const byte* spriteMapParam, const unsigned long timeToLiveParam, const unsigned long targetSpeedParam ): 
+        currentX{xStart},
+        currentY{yStart},
+        currentAngle{angleStart},          
+        targetName{nameParam},
+        timeToLive{timeToLiveParam},
+        targetSpeed{targetSpeedParam},
+        spriteMap{spriteMapParam},
+        eventClass()
+        {
+            //has
+            birthTime = millis();
+        }
     
     void virtual bouceHorizontally(){
         if( currentAngle < 180 ){
@@ -111,10 +114,8 @@ public:
     
     virtual ~bouncerClass(){
     }
-    
-    
+        
 }; 
-
 
 #endif /* BOUNCERCLASS_H */
 

@@ -9,7 +9,6 @@
 #include "arduboy_util_ale.h"
 
 
-
 #ifndef PLAYERCLASS_H
 #define PLAYERCLASS_H
 
@@ -24,7 +23,7 @@ class playerClass:public eventClass{
 public: 
         
     //uses
-    int playerName;
+    const int playerName;
     
     //has -  defaulted
     int playerX = STARTX; 
@@ -35,15 +34,14 @@ public:
     int aimY = 0;    
 public:         
         
-    playerClass( int nameParam ):eventClass(){
-        
-        playerName = nameParam;        
+    playerClass( const int nameParam ):playerName{nameParam},eventClass(){        
+       
     }    
     
     void drawAimer(){
              
-        int aimBaseX = playerX + 5;  // middle
-        int aimBasey = playerY ;  // gap on top     
+        const int aimBaseX = playerX + 5;  // middle
+        const int aimBasey = playerY ;  // gap on top     
         
         if( arduboy.pressed(DOWN_BUTTON) && (aimAngle > 0) ) {
             aimAngle = aimAngle - ANGLE_CHANGE_SPEED;                    
@@ -57,7 +55,7 @@ public:
         realAimlAngle = 180 - aimAngle;    
         
         // get angle in radians          
-        float angleRadians = realAimlAngle * radiansPerAngle;     
+        const float angleRadians = realAimlAngle * radiansPerAngle;     
         
         // x component
         aimX = roundf( aimBaseX + (SIZE_GUN * cos(angleRadians)));               
@@ -92,10 +90,10 @@ public:
             sound.tone(700, 100);            
             
             pk++;
-            bulletClass* bullet =  new bulletClass( pk, getRealAimX(), getRealAimY(), getRealAimlAngle() );    
+            const bulletClass* bullet =  new bulletClass( pk, getRealAimX(), getRealAimY(), getRealAimlAngle() );    
             scheduler.Append( bullet );  
             
-            gunCycleClass* cycleDelay = new gunCycleClass( pk, GUN_CYCLE_DELAY );
+            const gunCycleClass* cycleDelay = new gunCycleClass( pk, GUN_CYCLE_DELAY );
             scheduler.Append( cycleDelay );  
         }           
     }    
