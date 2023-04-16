@@ -121,13 +121,11 @@ void loop() {
     arduboy.display();    
 }
 
-
+int totalGhostsForLevel = 1;    
 void makeGhosts(){
     
-    int totalGhostsForLevel = 1;    
-    if( playerScore > 5 ){        
-        totalGhostsForLevel = ( playerScore / 5 ) + 1;
-    }
+    
+    totalGhostsForLevel++;
             
     if( (activeGhosts < totalGhostsForLevel) && (freeMemory() > 100) ){
         
