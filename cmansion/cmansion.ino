@@ -57,7 +57,8 @@ void showSplash(){
     sprites.drawOverwrite( 0, 0, splashScreen,0);
     arduboy.setCursor( 0, 0);
     arduboy.print( "press [A]\n" );    
-    arduboy.print( "Up/Dwn aim\n" );          
+    arduboy.print( "Up/Dwn aim\n" );      
+    arduboy.print( "v1.1n" );    
     
     arduboy.display();
     
