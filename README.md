@@ -21,7 +21,7 @@ The game is fast-paced; it is a small shooter, but with some added fun tricks.  
 + Every 5 points you will level up, more ghosts will appear!!
 
 Have fun.
-Send comments to n141az@yahoo.com
+Send comments to alejandrovazquez@yahoo.com
 
 
 [Play now with the online emulator!](https://felipemanga.github.io/ProjectABE/?url=https://raw.githubusercontent.com/avazqueznj/CMansion1/master/cmansion.ino.arduino.avr.leonardo.hex)
